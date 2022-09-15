@@ -7,6 +7,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
 import { setContext } from "@apollo/client/link/context";
 import { changeWorkspace, openRemoteConnection } from "./commands";
 import fetch from "cross-fetch";
+import { getUserWorkspaces } from "./utils/projects";
 
 export async function activate(context: vscode.ExtensionContext) {
   // Register commands
@@ -38,6 +39,9 @@ export async function activate(context: vscode.ExtensionContext) {
   });
 
   const username: string = currentCredentials?.account || "";
+
+  const workspaces = await getUserWorkspaces(client);
+
   const projectsProvider = new ProjectsProvider({
     apiClient: client,
     username,
@@ -47,9 +51,10 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(openRemoteCommand, openRemoteConnection)
   );
+
   context.subscriptions.push(
     vscode.commands.registerCommand(changeWorkspaceCommand, async () => {
-      const selection = await changeWorkspace(context);
+      const selection = await changeWorkspace(context, workspaces);
       if (selection) {
         projectsProvider.refresh(selection);
       }

@@ -58,8 +58,11 @@ export async function openRemoteConnection(label: string, trainingServer: any) {
   }
 }
 
-export async function changeWorkspace(context: vscode.ExtensionContext) {
-  return vscode.window.showQuickPick(["utkarsh867", "clearbot"], {
+export async function changeWorkspace(
+  context: vscode.ExtensionContext,
+  workspaces: string[]
+) {
+  return vscode.window.showQuickPick(workspaces, {
     onDidSelectItem(item) {
       context.globalState.update("deploifaiWorkspace", item);
     },

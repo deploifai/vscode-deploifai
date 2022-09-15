@@ -16,6 +16,18 @@ const GetProjects = gql`
   }
 `;
 
+const GetWorkspaces = gql`
+  query GetWorkspaces {
+    me {
+      teams {
+        account {
+          username
+        }
+      }
+    }
+  }
+`;
+
 export function getUserProjects(
   apiClient: ApolloClient<NormalizedCacheObject>,
   username: string
@@ -26,4 +38,14 @@ export function getUserProjects(
       username,
     },
   });
+}
+
+export async function getUserWorkspaces(
+  apiClient: ApolloClient<NormalizedCacheObject>
+): Promise<string[]> {
+  const result = await apiClient.query({
+    query: GetWorkspaces,
+  });
+
+  return result.data.me.teams.map((team: any) => team.account.username);
 }
