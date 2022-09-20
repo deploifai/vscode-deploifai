@@ -100,7 +100,7 @@
   resolved "https://registry.yarnpkg.com/@microsoft/dynamicproto-js/-/dynamicproto-js-1.1.6.tgz#6fe03468862861f5f88ac4c3959a652b3797f1bc"
   integrity sha512-D1Oivw1A4bIXhzBIy3/BBPn3p2On+kpO2NiYt9shICDK7L/w+cR6FFBUsBZ05l6iqzTeL+Jm8lAYn0g6G7DmDg==
 
-"@microsoft/vscode-azext-utils@^0.3.15":
+"@microsoft/vscode-azext-utils@6^0.3.15":
   version "0.3.15"
   resolved "https://registry.yarnpkg.com/@microsoft/vscode-azext-utils/-/vscode-azext-utils-0.3.15.tgz#7b15c287c981330c6bcc527bbde63d968efc175d"
   integrity sha512-fWM31QrVG+2f4izDyWu5Tj8WFAPGglbS7UWyCBVHxb+hGgodrv2g89iijVgWZl4TLA5FtcnRIMpzRAjic/2/yw==
