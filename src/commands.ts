@@ -49,7 +49,9 @@ export async function openRemoteConnection(label: string, trainingServer: any) {
     });
 
     fs.appendFileSync(openSSHConfigFilePath, SSHConfig.stringify(newConfig));
-    fs.chmodSync(tlsFilePath, 400);
+
+    console.log(tlsFilePath);
+    fs.chmodSync(tlsFilePath, 0o400);
 
     const uri = vscode.Uri.parse(
       `vscode-remote://ssh-remote+${hostId}/home/ubuntu`

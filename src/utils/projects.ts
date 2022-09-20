@@ -19,6 +19,9 @@ const GetProjects = gql`
 const GetWorkspaces = gql`
   query GetWorkspaces {
     me {
+      account {
+        username
+      }
       teams {
         account {
           username
@@ -47,5 +50,8 @@ export async function getUserWorkspaces(
     query: GetWorkspaces,
   });
 
-  return result.data.me.teams.map((team: any) => team.account.username);
+  const teamUsernames = result.data.me.teams.map(
+    (team: any) => team.account.username
+  );
+  return [result.data.me.account.username, ...teamUsernames];
 }
