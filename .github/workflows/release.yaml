@@ -20,3 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+
+      - name: Compile
+        run: yarn compile
+
+      - name: Publish
+        run: yarn vsce publish -p ${{ secrets.VSCE_TOKEN }}
