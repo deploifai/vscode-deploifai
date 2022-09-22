@@ -1,0 +1,40 @@
+name: Publish
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Generate release changelog
+        id: generate-release-changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          onlyLastTag: true
+#          stripHeaders: true
+          stripGeneratorNotice: true
+
+      - name: Commit changes to changelog
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actor
+          add: CHANGELOG.md
+          message: Update changelog ${{ github.event.release.tag_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn
+
+#      - name: Publish
+#        run: yarn vsce publish -p ${{ secrets.VSCE_TOKEN }}
