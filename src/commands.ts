@@ -60,10 +60,8 @@ export async function openRemoteConnection(label: string, trainingServer: any) {
   }
 }
 
-export async function changeWorkspace(
-  context: vscode.ExtensionContext,
-  workspaces: string[]
-) {
+export async function changeWorkspace(context: vscode.ExtensionContext) {
+  const workspaces = context.globalState.get("deploifaiWorkspaces") as string[];
   return vscode.window.showQuickPick(workspaces, {
     onDidSelectItem(item) {
       context.globalState.update("deploifaiWorkspace", item);

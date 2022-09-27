@@ -34,4 +34,15 @@ export class ProjectTreeServerItem extends ProjectsTreeItem {
   }
 }
 
+export class ProjectTreeLoginItem extends ProjectsTreeItem {
+  constructor() {
+    super("Login to Deploifai", vscode.TreeItemCollapsibleState.None);
+    this.iconPath = new vscode.ThemeIcon("plug");
+    this.command = {
+      command: "deploifaiProjects.login",
+      title: "Login to Deploifai",
+    };
+  }
+}
+
 export default ProjectsTreeItem;

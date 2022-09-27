@@ -1,4 +1,6 @@
+import * as vscode from "vscode";
 import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
+import { ProjectsProvider } from "../providers/ProjectsProvider";
 
 const GetProjects = gql`
   query GetProjectsInWorkspace($username: String!) {
