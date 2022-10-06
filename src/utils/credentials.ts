@@ -1,38 +1,61 @@
-import * as os from "os";
+import * as vscode from "vscode";
 import * as keytar from "keytar";
+import fetch from "node-fetch";
+
+class LoginRejectedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LoginRejectedError";
+  }
+}
 
 async function getDeploifaiCredentials() {
-  if (os.platform() === "darwin" || os.platform() === "win32") {
-    const deploifaiVSCodeCredentials = await keytar.findCredentials(
-      "deploifai-vscode"
-    );
-    if (deploifaiVSCodeCredentials.length) {
-      return deploifaiVSCodeCredentials[0];
-    } else {
-      const deploifaiCLICredentials = await keytar.findCredentials(
-        "deploifai-cli"
-      );
-      if (deploifaiCLICredentials.length) {
-        // Add the deploifai-cli credentials to deploifai-vscode as well for persistence
-        await keytar.setPassword(
-          "deploifai-vscode",
-          deploifaiCLICredentials[0].account,
-          deploifaiCLICredentials[0].password
-        );
-        return deploifaiCLICredentials[0];
-      } else {
-        return null;
-      }
-    }
+  const deploifaiVSCodeCredentials = await keytar.findCredentials(
+    "deploifai-vscode"
+  );
+  if (deploifaiVSCodeCredentials.length) {
+    return deploifaiVSCodeCredentials[0];
   } else {
-    const deploifaiVSCodeCredentials = await keytar.findCredentials(
-      "deploifai-vscode"
-    );
-    if (deploifaiVSCodeCredentials.length) {
-      return deploifaiVSCodeCredentials[0];
-    } else {
-      return null;
+    return null;
+  }
+}
+
+export async function createDeploifaiCredentials(
+  username: string,
+  sessionToken: string
+) {
+  try {
+    console.log(username, sessionToken);
+    const response = await fetch("https://api.deploif.ai/auth/check/cli", {
+      method: "POST",
+      body: JSON.stringify({ username }),
+      headers: {
+        "Content-Type": "application/json",
+        authorization: sessionToken,
+      },
+    });
+
+    if (response.status === 401) {
+      throw new LoginRejectedError("Login Rejected");
+    } else if (response.status === 200) {
+      await keytar.setPassword("deploifai-vscode", username, sessionToken);
+      return true;
     }
+  } catch (err) {
+    console.log(err);
+    if (err instanceof LoginRejectedError) {
+      vscode.window.showErrorMessage("Invalid username or token");
+    } else {
+      vscode.window.showErrorMessage("Unknown error");
+    }
+  }
+  return false;
+}
+
+export async function removeDeploifaiCredentials() {
+  const credentials = await getDeploifaiCredentials();
+  if (credentials) {
+    await keytar.deletePassword("deploifai-vscode", credentials?.account);
   }
 }
 

@@ -2,25 +2,58 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { ProjectsProvider } from "./providers/ProjectsProvider";
-import { changeWorkspace, openRemoteConnection } from "./commands";
+import {
+  changeWorkspace,
+  loginToDeploifai,
+  logoutFromDeploifai,
+  openRemoteConnection,
+} from "./commands";
 import getDeploifaiCredentials from "./utils/credentials";
 import init from "./utils/init";
 
 export async function activate(context: vscode.ExtensionContext) {
   // Register commands
   const openRemoteCommand = "deploifaiProjects.openRemote";
-
   // Register callbacks for commands
   context.subscriptions.push(
     vscode.commands.registerCommand(openRemoteCommand, openRemoteConnection)
   );
 
   const changeWorkspaceCommand = "deploifai.changeWorkspace";
-  const deploifaiCredentials = await getDeploifaiCredentials();
 
-  await init(context, deploifaiCredentials);
+  await init(context);
 
   const projectsProvider = new ProjectsProvider(context);
+
+  const loginCommand = "deploifai.login";
+  const logoutCommand = "deploifai.logout";
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(loginCommand, async () => {
+      const username = await loginToDeploifai();
+      if (username) {
+        await init(context);
+        projectsProvider.refresh(username);
+        vscode.commands.executeCommand("setContext", "deploifaiLoggedIn", true);
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(logoutCommand, async () => {
+      const loggedOut = await logoutFromDeploifai();
+      if (loggedOut) {
+        await init(context);
+        projectsProvider.refresh("");
+        vscode.commands.executeCommand(
+          "setContext",
+          "deploifaiLoggedIn",
+          false
+        );
+      }
+    })
+  );
+
   context.subscriptions.push(
     vscode.commands.registerCommand(changeWorkspaceCommand, async () => {
       const selection = await changeWorkspace(context);

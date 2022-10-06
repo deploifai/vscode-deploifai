@@ -17,6 +17,7 @@ export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
   apiClient: ApolloClient<NormalizedCacheObject>;
   username: string;
   loginStatus: boolean;
+  context: vscode.ExtensionContext;
 
   private _onDidChangeTreeData: vscode.EventEmitter<
     Projects | undefined | null | void
@@ -27,19 +28,26 @@ export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
   > = this._onDidChangeTreeData.event;
 
   constructor(context: vscode.ExtensionContext) {
-    this.apiClient = context.globalState.get(
+    this.context = context;
+    this.username =
+      (this.context.globalState.get("deploifaiUsername") as string) || "";
+
+    this.apiClient = this.context.globalState.get(
       "deploifaiAPIClient"
     ) as ApolloClient<NormalizedCacheObject>;
-    this.username =
-      (context.globalState.get("deploifaiUsername") as string) || "";
-
-    this.loginStatus = context.globalState.get(
+    this.loginStatus = this.context.globalState.get(
       "deploifaiLoginStatus"
     ) as boolean;
   }
 
   refresh(username: string) {
     this.username = username;
+    this.apiClient = this.context.globalState.get(
+      "deploifaiAPIClient"
+    ) as ApolloClient<NormalizedCacheObject>;
+    this.loginStatus = this.context.globalState.get(
+      "deploifaiLoginStatus"
+    ) as boolean;
     this._onDidChangeTreeData.fire();
   }
 

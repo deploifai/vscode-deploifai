@@ -18,7 +18,7 @@ export class ProjectTreeProjectItem extends ProjectsTreeItem {
     super(label, collapsible);
     this.id = project.id;
     this.project = project;
-    this.iconPath = new vscode.ThemeIcon("folder-library");
+    this.iconPath = new vscode.ThemeIcon("repo");
   }
 }
 
@@ -39,7 +39,7 @@ export class ProjectTreeLoginItem extends ProjectsTreeItem {
     super("Login to Deploifai", vscode.TreeItemCollapsibleState.None);
     this.iconPath = new vscode.ThemeIcon("plug");
     this.command = {
-      command: "deploifaiProjects.login",
+      command: "deploifai.login",
       title: "Login to Deploifai",
     };
   }
