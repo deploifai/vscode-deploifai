@@ -18,7 +18,7 @@ export class ProjectTreeProjectItem extends ProjectsTreeItem {
     super(label, collapsible);
     this.id = project.id;
     this.project = project;
-    this.iconPath = new vscode.ThemeIcon("folder-library");
+    this.iconPath = new vscode.ThemeIcon("repo");
   }
 }
 
@@ -30,6 +30,17 @@ export class ProjectTreeServerItem extends ProjectsTreeItem {
       command: "deploifaiProjects.openRemote",
       title: "Connect to remote server",
       arguments: [this.label, trainingServer],
+    };
+  }
+}
+
+export class ProjectTreeLoginItem extends ProjectsTreeItem {
+  constructor() {
+    super("Login to Deploifai", vscode.TreeItemCollapsibleState.None);
+    this.iconPath = new vscode.ThemeIcon("plug");
+    this.command = {
+      command: "deploifai.login",
+      title: "Login to Deploifai",
     };
   }
 }

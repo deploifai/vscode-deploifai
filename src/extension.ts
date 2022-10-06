@@ -2,59 +2,61 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { ProjectsProvider } from "./providers/ProjectsProvider";
-import * as keytar from "keytar";
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
-import { setContext } from "@apollo/client/link/context";
-import { changeWorkspace, openRemoteConnection } from "./commands";
-import fetch from "cross-fetch";
-import { getUserWorkspaces } from "./utils/projects";
+import {
+  changeWorkspace,
+  loginToDeploifai,
+  logoutFromDeploifai,
+  openRemoteConnection,
+} from "./commands";
+import getDeploifaiCredentials from "./utils/credentials";
+import init from "./utils/init";
 
 export async function activate(context: vscode.ExtensionContext) {
   // Register commands
   const openRemoteCommand = "deploifaiProjects.openRemote";
-  const changeWorkspaceCommand = "deploifai.changeWorkspace";
-  // Get credentials to communicate with GraphQL API
-  const deploifaiCredentials = await keytar.findCredentials("deploifai-cli");
-  const currentCredentials =
-    deploifaiCredentials.length > 0 ? deploifaiCredentials[0] : null;
-
-  // Create GraphQL API client
-  const httpLink = new HttpLink({
-    uri: "https://api.deploif.ai/graphql",
-    fetch,
-  });
-
-  const authLink = setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        authorization: currentCredentials ? currentCredentials.password : "",
-      },
-    };
-  });
-
-  const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-  });
-
-  const username: string = currentCredentials?.account || "";
-
-  const workspaces = await getUserWorkspaces(client);
-
-  const projectsProvider = new ProjectsProvider({
-    apiClient: client,
-    username,
-  });
-
   // Register callbacks for commands
   context.subscriptions.push(
     vscode.commands.registerCommand(openRemoteCommand, openRemoteConnection)
   );
 
+  const changeWorkspaceCommand = "deploifai.changeWorkspace";
+
+  await init(context);
+
+  const projectsProvider = new ProjectsProvider(context);
+
+  const loginCommand = "deploifai.login";
+  const logoutCommand = "deploifai.logout";
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(loginCommand, async () => {
+      const username = await loginToDeploifai();
+      if (username) {
+        await init(context);
+        projectsProvider.refresh(username);
+        vscode.commands.executeCommand("setContext", "deploifaiLoggedIn", true);
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(logoutCommand, async () => {
+      const loggedOut = await logoutFromDeploifai();
+      if (loggedOut) {
+        await init(context);
+        projectsProvider.refresh("");
+        vscode.commands.executeCommand(
+          "setContext",
+          "deploifaiLoggedIn",
+          false
+        );
+      }
+    })
+  );
+
   context.subscriptions.push(
     vscode.commands.registerCommand(changeWorkspaceCommand, async () => {
-      const selection = await changeWorkspace(context, workspaces);
+      const selection = await changeWorkspace(context);
       if (selection) {
         projectsProvider.refresh(selection);
       }
