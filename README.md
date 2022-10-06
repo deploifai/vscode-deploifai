@@ -1,6 +1,6 @@
 # deploifai vs-code extension
 
-Deploifai is now availble in VSCode directly using this extension!
+Deploifai is now available in VSCode directly using this extension!
 
 **What is Deploifai?**
 Deploifai is a platform that allows you to bootstrap machine learning projects quickly and build with the best tools for data science and machine learning such as Jupyter, MLFlow, setup and integrated with your cloud service for compute and storage.
@@ -17,7 +17,7 @@ All your projects are accessible from the extension, with the option to connect 
 
 ## Extension Settings
 
-You must install the Deploifai CLI and perform a `deploifai login` for this extension to work.
+The extension relies on the system's keyring to login. Login separately using VSCode to use the extension.
 
 ## Known Issues
 
