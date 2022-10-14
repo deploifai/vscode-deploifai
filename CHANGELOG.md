@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.0.8](https://github.com/deploifai/vscode-deploifai/tree/v0.0.8) (2022-10-14)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.7...v0.0.8)
+
+**Fixed bugs:**
+
+- BUGFIX: Set context values for login status [\#4](https://github.com/deploifai/vscode-deploifai/pull/4) ([utkarsh867](https://github.com/utkarsh867))
+
+
+
+
 ## [v0.0.7](https://github.com/deploifai/vscode-deploifai/tree/v0.0.7) (2022-10-06)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.6...v0.0.7)
