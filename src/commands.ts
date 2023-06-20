@@ -1,14 +1,19 @@
-import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
-import * as http from "https";
 import * as vscode from "vscode";
 import {
   createDeploifaiCredentials,
   removeDeploifaiCredentials,
 } from "./utils/credentials";
-import init from "./utils/init";
-const SSHConfig = require("ssh-config");
+import {
+  appendSSHConfig,
+  createSSHKeyFile,
+  getIdentityFilePathInSection,
+  getSSHConfigPath,
+  openSSHConnectionToServer,
+  readSSHConfig,
+  sshHostKeyExists,
+  sshHostSection,
+} from "./utils/ssh";
 
 export async function openRemoteConnection(label: string, trainingServer: any) {
   const hostId = trainingServer.id;
@@ -16,50 +21,37 @@ export async function openRemoteConnection(label: string, trainingServer: any) {
   const user = trainingServer.vmSSHUsername;
   const identityFileURL = trainingServer.tlsPresignedUrl;
 
-  const homeDirectory = os.homedir();
-  const openSSHConfigPath = path.join(homeDirectory, ".ssh");
-  const openSSHConfigFilePath = path.join(openSSHConfigPath, "config");
+  const sshConfigFilePath = getSSHConfigPath();
 
-  const configFileContents = fs.readFileSync(openSSHConfigFilePath, "utf-8");
-  const config = SSHConfig.parse(`${configFileContents.toString()}`);
-  if (config.find({ Host: hostId })) {
-    const uri = vscode.Uri.parse(
-      `vscode-remote://ssh-remote+${hostId}/home/ubuntu`
-    );
-    vscode.commands.executeCommand("vscode.openFolder", uri);
+  const targetHostSection = sshHostSection(
+    hostId,
+    readSSHConfig(sshConfigFilePath)
+  );
+
+  if (targetHostSection && sshHostKeyExists(targetHostSection)) {
+    openSSHConnectionToServer(hostId, `/home/${user}`);
+  } else if (targetHostSection && !sshHostKeyExists(targetHostSection)) {
+    try {
+      await createSSHKeyFile(
+        identityFileURL,
+        getIdentityFilePathInSection(targetHostSection)
+      );
+      openSSHConnectionToServer(hostId, `/home/${user}`);
+    } catch (err) {
+      // TODO: This error could be handled better?
+      console.error(err);
+    }
   } else {
-    // Write the SSH Key to the file
-    const tlsFilePath = path.join(openSSHConfigPath, hostId);
-    const tlsFile = fs.createWriteStream(tlsFilePath);
-    await new Promise((resolve, reject) => {
-      try {
-        http.get(identityFileURL, (response) => {
-          response.on("end", function () {
-            resolve("Download complete");
-          });
-          response.pipe(tlsFile);
-        });
-      } catch (err) {
-        reject(err);
-      }
+    // Host is being configured for the first time
+    const tlsFilePath = path.join(path.dirname(sshConfigFilePath), hostId);
+    await createSSHKeyFile(identityFileURL, tlsFilePath);
+    appendSSHConfig(sshConfigFilePath, {
+      hostId,
+      hostname,
+      user,
+      privateKeyFilePath: tlsFilePath,
     });
-
-    const newConfig = SSHConfig.parse(``).append({
-      Host: hostId,
-      HostName: hostname,
-      User: user,
-      identityFile: tlsFilePath,
-    });
-
-    const newConfigString = "\r\n" + SSHConfig.stringify(newConfig) + "\r\n";
-
-    fs.appendFileSync(openSSHConfigFilePath, newConfigString);
-    fs.chmodSync(tlsFilePath, 0o400);
-
-    const uri = vscode.Uri.parse(
-      `vscode-remote://ssh-remote+${hostId}/home/ubuntu`
-    );
-    vscode.commands.executeCommand("vscode.openFolder", uri);
+    openSSHConnectionToServer(hostId, `/home/${user}`);
   }
 }
 
