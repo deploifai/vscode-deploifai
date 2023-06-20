@@ -11,9 +11,6 @@ import init from "./utils/init";
 const SSHConfig = require("ssh-config");
 
 export async function openRemoteConnection(label: string, trainingServer: any) {
-  console.log("Server name", label);
-  console.log(trainingServer);
-
   const hostId = trainingServer.id;
   const hostname = trainingServer.vmPublicIps[0];
   const user = trainingServer.vmSSHUsername;
@@ -31,6 +28,7 @@ export async function openRemoteConnection(label: string, trainingServer: any) {
     );
     vscode.commands.executeCommand("vscode.openFolder", uri);
   } else {
+    // Write the SSH Key to the file
     const tlsFilePath = path.join(openSSHConfigPath, hostId);
     const tlsFile = fs.createWriteStream(tlsFilePath);
     await new Promise((resolve, reject) => {
@@ -53,9 +51,9 @@ export async function openRemoteConnection(label: string, trainingServer: any) {
       identityFile: tlsFilePath,
     });
 
-    fs.appendFileSync(openSSHConfigFilePath, SSHConfig.stringify(newConfig));
+    const newConfigString = "\r\n" + SSHConfig.stringify(newConfig) + "\r\n";
 
-    console.log(tlsFilePath);
+    fs.appendFileSync(openSSHConfigFilePath, newConfigString);
     fs.chmodSync(tlsFilePath, 0o400);
 
     const uri = vscode.Uri.parse(
