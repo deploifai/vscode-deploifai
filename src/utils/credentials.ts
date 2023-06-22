@@ -25,7 +25,6 @@ export async function createDeploifaiCredentials(
   sessionToken: string
 ) {
   try {
-    console.log(username, sessionToken);
     const response = await fetch("https://api.deploif.ai/auth/check/cli", {
       method: "POST",
       body: JSON.stringify({ username }),
@@ -42,7 +41,6 @@ export async function createDeploifaiCredentials(
       return true;
     }
   } catch (err) {
-    console.log(err);
     if (err instanceof LoginRejectedError) {
       vscode.window.showErrorMessage("Invalid username or token");
     } else {

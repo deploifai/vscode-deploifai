@@ -5,7 +5,6 @@ import { getUserWorkspaces } from "./projects";
 
 export default async function init(context: vscode.ExtensionContext) {
   const deploifaiCredentials = await getDeploifaiCredentials();
-  console.log(deploifaiCredentials);
   if (deploifaiCredentials === null) {
     context.globalState.update("deploifaiLoginStatus", false);
   } else {
