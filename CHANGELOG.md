@@ -1,5 +1,25 @@
 # Changelog
 
+## [v0.0.9](https://github.com/deploifai/vscode-deploifai/tree/v0.0.9) (2023-06-25)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.8...v0.0.9)
+
+**Fixed bugs:**
+
+- The ssh config needs to have a endline at the start and end of appending [\#7](https://github.com/deploifai/vscode-deploifai/issues/7)
+
+**Closed issues:**
+
+- add an open source license [\#5](https://github.com/deploifai/vscode-deploifai/issues/5)
+
+**Merged pull requests:**
+
+- Fix issues with SSH configurations on POSIX systems [\#9](https://github.com/deploifai/vscode-deploifai/pull/9) ([utkarsh867](https://github.com/utkarsh867))
+- Create LICENSE [\#6](https://github.com/deploifai/vscode-deploifai/pull/6) ([utkarsh867](https://github.com/utkarsh867))
+
+
+
+
 ## [v0.0.8](https://github.com/deploifai/vscode-deploifai/tree/v0.0.8) (2022-10-14)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.7...v0.0.8)
