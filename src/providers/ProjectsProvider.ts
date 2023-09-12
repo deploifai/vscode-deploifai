@@ -1,4 +1,4 @@
-import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import * as vscode from "vscode";
 import Projects, {
   ProjectTreeLoginItem,
@@ -6,6 +6,8 @@ import Projects, {
   ProjectTreeServerItem,
 } from "../treeitems/Projects";
 import { getUserProjects } from "../utils/projects";
+import createAPIClient from "../utils/api";
+import { DeploifaiCredentials } from "../utils/credentials";
 
 export interface ProjectsProviderInit {
   apiClient: ApolloClient<NormalizedCacheObject>;
@@ -31,10 +33,10 @@ export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
     this.context = context;
     this.username =
       (this.context.globalState.get("deploifaiUsername") as string) || "";
-
-    this.apiClient = this.context.globalState.get(
-      "deploifaiAPIClient"
-    ) as ApolloClient<NormalizedCacheObject>;
+    const credentials = this.context.globalState.get(
+      "deploifaiCredentials"
+    ) as DeploifaiCredentials;
+    this.apiClient = createAPIClient(credentials.password);
     this.loginStatus = this.context.globalState.get(
       "deploifaiLoginStatus"
     ) as boolean;
@@ -42,9 +44,10 @@ export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
 
   refresh(username: string) {
     this.username = username;
-    this.apiClient = this.context.globalState.get(
-      "deploifaiAPIClient"
-    ) as ApolloClient<NormalizedCacheObject>;
+    const credentials = this.context.globalState.get(
+      "deploifaiCredentials"
+    ) as DeploifaiCredentials;
+    this.apiClient = createAPIClient(credentials.password);
     this.loginStatus = this.context.globalState.get(
       "deploifaiLoginStatus"
     ) as boolean;

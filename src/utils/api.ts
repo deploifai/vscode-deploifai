@@ -2,7 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
 import { setContext } from "@apollo/client/link/context";
 import fetch from "cross-fetch";
 
-function createAPIClient(credentials: { account: string; password: string }) {
+function createAPIClient(authToken: string) {
   const httpLink = new HttpLink({
     uri: "https://api.deploif.ai/graphql",
     fetch,
@@ -12,7 +12,7 @@ function createAPIClient(credentials: { account: string; password: string }) {
     return {
       headers: {
         ...headers,
-        authorization: credentials.password,
+        authorization: authToken,
       },
     };
   });
