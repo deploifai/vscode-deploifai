@@ -9,6 +9,13 @@ class LoginRejectedError extends Error {
   }
 }
 
+class CheckCredentialsRejectedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CheckCredentialsRejectedError";
+  }
+}
+
 export type DeploifaiCredentials = {
   account: string;
   password: string;
@@ -49,10 +56,46 @@ export async function createDeploifaiCredentials(
     if (err instanceof LoginRejectedError) {
       vscode.window.showErrorMessage("Invalid token");
     } else {
-      vscode.window.showErrorMessage("Unknown error");
+      vscode.window.showErrorMessage("Unknown error while logging in");
     }
   }
   return undefined;
+}
+
+export async function checkDeploifaiCredentials(): Promise<boolean> {
+  const credentials = await getDeploifaiCredentials();
+
+  if (credentials) {
+    try {
+      const response = await fetch("https://api.deploif.ai/auth/check/token", {
+        method: "POST",
+        body: JSON.stringify({ username: credentials.account }),
+        headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          "Content-Type": "application/json",
+          authorization: credentials.password,
+        },
+      });
+
+      if (response.status === 401) {
+        throw new CheckCredentialsRejectedError(
+          "Checking credentials rejected"
+        );
+      } else if (response.status === 200) {
+        return true;
+      }
+    } catch (err) {
+      if (err instanceof CheckCredentialsRejectedError) {
+        vscode.window.showErrorMessage("Invalid credentials");
+      } else {
+        vscode.window.showErrorMessage(
+          "Unknown error while checking credentials"
+        );
+      }
+    }
+  }
+
+  return false;
 }
 
 export async function removeDeploifaiCredentials() {

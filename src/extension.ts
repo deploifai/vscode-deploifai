@@ -8,8 +8,10 @@ import {
   logoutFromDeploifai,
   openRemoteConnection,
 } from "./commands";
-import getDeploifaiCredentials from "./utils/credentials";
-import init from "./utils/init";
+import getDeploifaiCredentials, {
+  removeDeploifaiCredentials,
+} from "./utils/credentials";
+import init, { InitAuthError, clearContext } from "./utils/init";
 
 export async function activate(context: vscode.ExtensionContext) {
   // Register commands
@@ -21,7 +23,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const changeWorkspaceCommand = "deploifai.changeWorkspace";
 
-  await init(context);
+  try {
+    await init(context);
+  } catch (err) {
+    if (err instanceof InitAuthError) {
+      // remove faulty credentials and re-initialize to reset the state of this extension
+      await removeDeploifaiCredentials();
+      await init(context);
+    }
+  }
 
   const projectsProvider = new ProjectsProvider(context);
 

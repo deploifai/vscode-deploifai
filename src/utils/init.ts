@@ -1,7 +1,16 @@
 import * as vscode from "vscode";
 import createAPIClient from "./api";
-import getDeploifaiCredentials from "./credentials";
+import getDeploifaiCredentials, {
+  checkDeploifaiCredentials,
+} from "./credentials";
 import { getUserWorkspaces } from "./projects";
+
+export class InitAuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InitAuthError";
+  }
+}
 
 export default async function init(context: vscode.ExtensionContext) {
   const deploifaiCredentials = await getDeploifaiCredentials();
@@ -17,6 +26,9 @@ export default async function init(context: vscode.ExtensionContext) {
 
     const username: string = deploifaiCredentials.account;
     context.globalState.update("deploifaiUsername", username);
+
+    const isValid = await checkDeploifaiCredentials();
+    if (!isValid) throw new InitAuthError("Invalid credentials");
 
     const workspaces = await getUserWorkspaces(client);
     context.globalState.update("deploifaiWorkspaces", workspaces);
