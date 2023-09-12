@@ -1,5 +1,27 @@
 # Changelog
 
+## [v0.1.0](https://github.com/deploifai/vscode-deploifai/tree/v0.1.0) (2023-09-12)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.9...v0.1.0)
+
+**Implemented enhancements:**
+
+- add graphql-codegen to generate typescript bindings for graphql queries and mutation [\#17](https://github.com/deploifai/vscode-deploifai/issues/17)
+- add graphql-codegen to generate typescript bindings [\#18](https://github.com/deploifai/vscode-deploifai/pull/18) ([98sean98](https://github.com/98sean98))
+
+**Fixed bugs:**
+
+- remove the need to input `username` when logging in [\#13](https://github.com/deploifai/vscode-deploifai/issues/13)
+- upgrade dependencies and fix readme [\#16](https://github.com/deploifai/vscode-deploifai/pull/16) ([98sean98](https://github.com/98sean98))
+- migrate login functionality [\#15](https://github.com/deploifai/vscode-deploifai/pull/15) ([98sean98](https://github.com/98sean98))
+
+**Closed issues:**
+
+- upgrade dependencies [\#14](https://github.com/deploifai/vscode-deploifai/issues/14)
+
+
+
+
 ## [v0.0.9](https://github.com/deploifai/vscode-deploifai/tree/v0.0.9) (2023-06-25)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.8...v0.0.9)
