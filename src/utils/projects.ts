@@ -1,5 +1,4 @@
-import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
-import { ProjectsProvider } from "../providers/ProjectsProvider";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import { graphql } from "../gql/generated";
 
 export const projectFragment = graphql(`
