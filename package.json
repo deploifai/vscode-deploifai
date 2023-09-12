@@ -82,12 +82,18 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
+    "precompile": "yarn run download-schema && yarn run codegen",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "yarn run compile && yarn run lint",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "download-schema": "SCHEMA=https://api.deploif.ai/graphql graphql-codegen --config codegen/schema.ts",
+    "codegen": "graphql-codegen --config codegen/codegen.ts"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/fragment-matcher": "^5.0.0",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.6.0",
