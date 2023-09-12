@@ -2,18 +2,30 @@ import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
 import { ProjectsProvider } from "../providers/ProjectsProvider";
 import { graphql } from "../gql/generated";
 
+export const projectFragment = graphql(`
+  fragment Project on Project {
+    id
+    name
+    trainings {
+      ...Training
+    }
+  }
+`);
+
+export const trainingFragment = graphql(`
+  fragment Training on Training {
+    id
+    name
+    tlsPresignedUrl
+    vmPublicIps
+    vmSSHUsername
+  }
+`);
+
 const getProjectsQuery = graphql(`
   query GetProjectsInWorkspace($username: String!) {
     projects(whereAccount: { username: $username }) {
-      id
-      name
-      trainings {
-        id
-        name
-        tlsPresignedUrl
-        vmPublicIps
-        vmSSHUsername
-      }
+      ...Project
     }
   }
 `);

@@ -14,12 +14,16 @@ import {
   sshHostKeyExists,
   sshHostSection,
 } from "./utils/ssh";
+import { TrainingFragment } from "./gql/generated/graphql";
 
-export async function openRemoteConnection(label: string, trainingServer: any) {
+export async function openRemoteConnection(
+  label: string,
+  trainingServer: TrainingFragment
+) {
   const hostId = trainingServer.id;
-  const hostname = trainingServer.vmPublicIps[0];
-  const user = trainingServer.vmSSHUsername;
-  const identityFileURL = trainingServer.tlsPresignedUrl;
+  const hostname = (trainingServer.vmPublicIps as string[])[0];
+  const user = trainingServer.vmSSHUsername as string;
+  const identityFileURL = trainingServer.tlsPresignedUrl as string;
 
   const sshConfigFilePath = getSSHConfigPath();
 

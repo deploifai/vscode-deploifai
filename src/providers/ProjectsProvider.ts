@@ -5,9 +5,14 @@ import Projects, {
   ProjectTreeProjectItem,
   ProjectTreeServerItem,
 } from "../treeitems/Projects";
-import { getUserProjects } from "../utils/projects";
+import {
+  getUserProjects,
+  projectFragment,
+  trainingFragment,
+} from "../utils/projects";
 import createAPIClient from "../utils/api";
 import { DeploifaiCredentials } from "../utils/credentials";
+import { useFragment } from "../gql/generated";
 
 export interface ProjectsProviderInit {
   apiClient: ApolloClient<NormalizedCacheObject>;
@@ -62,21 +67,21 @@ export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
     if (this.loginStatus) {
       if (element) {
         const projectElement = element as ProjectTreeProjectItem;
-        const trainingServers = projectElement.project.trainings;
+        const trainingServers = useFragment(
+          trainingFragment,
+          projectElement.project.trainings
+        );
 
-        return trainingServers.map((trainingServer: any) => {
-          const { id: trainingServerId, name: trainingServerName } =
-            trainingServer;
-          return new ProjectTreeServerItem(trainingServerName, trainingServer);
+        return trainingServers.map((trainingServer) => {
+          return new ProjectTreeServerItem(trainingServer.name, trainingServer);
         });
       } else {
         // Top-level render projects
-        const projects = await getUserProjects(this.apiClient, this.username);
-        return projects.data.projects.map((project: any) => {
-          const { id: projectId, name: projectName, trainings } = project;
-
+        const result = await getUserProjects(this.apiClient, this.username);
+        const projects = useFragment(projectFragment, result.data.projects);
+        return projects.map((project) => {
           return new ProjectTreeProjectItem(
-            projectName,
+            project.name,
             project,
             vscode.TreeItemCollapsibleState.Expanded
           );

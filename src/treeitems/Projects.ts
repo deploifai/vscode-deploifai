@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { ProjectFragment, TrainingFragment } from "../gql/generated/graphql";
 
 class ProjectsTreeItem extends vscode.TreeItem {
   constructor(
@@ -12,7 +13,7 @@ class ProjectsTreeItem extends vscode.TreeItem {
 export class ProjectTreeProjectItem extends ProjectsTreeItem {
   constructor(
     public readonly label: string,
-    public readonly project: any,
+    public readonly project: ProjectFragment,
     collapsible: vscode.TreeItemCollapsibleState
   ) {
     super(label, collapsible);
@@ -23,7 +24,10 @@ export class ProjectTreeProjectItem extends ProjectsTreeItem {
 }
 
 export class ProjectTreeServerItem extends ProjectsTreeItem {
-  constructor(public readonly label: string, readonly trainingServer: any) {
+  constructor(
+    public readonly label: string,
+    readonly trainingServer: TrainingFragment
+  ) {
     super(label, vscode.TreeItemCollapsibleState.None);
     this.iconPath = new vscode.ThemeIcon("vm-connect");
     this.command = {
