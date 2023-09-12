@@ -26,14 +26,13 @@ async function getDeploifaiCredentials(): Promise<DeploifaiCredentials | null> {
 }
 
 export async function createDeploifaiCredentials(
-  username: string,
   sessionToken: string
-) {
+): Promise<string | undefined> {
   try {
-    const response = await fetch("https://api.deploif.ai/auth/check/cli", {
+    const response = await fetch("https://api.deploif.ai/auth/login/token", {
       method: "POST",
-      body: JSON.stringify({ username }),
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         "Content-Type": "application/json",
         authorization: sessionToken,
       },
@@ -42,17 +41,18 @@ export async function createDeploifaiCredentials(
     if (response.status === 401) {
       throw new LoginRejectedError("Login Rejected");
     } else if (response.status === 200) {
-      await keytar.setPassword("deploifai-vscode", username, sessionToken);
-      return true;
+      const body = await response.json();
+      await keytar.setPassword("deploifai-vscode", body.username, sessionToken);
+      return body.username;
     }
   } catch (err) {
     if (err instanceof LoginRejectedError) {
-      vscode.window.showErrorMessage("Invalid username or token");
+      vscode.window.showErrorMessage("Invalid token");
     } else {
       vscode.window.showErrorMessage("Unknown error");
     }
   }
-  return false;
+  return undefined;
 }
 
 export async function removeDeploifaiCredentials() {

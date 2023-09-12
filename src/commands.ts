@@ -68,21 +68,13 @@ export async function changeWorkspace(context: vscode.ExtensionContext) {
   });
 }
 
-export async function loginToDeploifai() {
-  const username = await vscode.window.showInputBox({
-    title: "Username",
-  });
+export async function loginToDeploifai(): Promise<string | undefined> {
   const sessionToken = await vscode.window.showInputBox({
-    title: "Session Token",
+    title: "Personal access token",
   });
 
-  if (username && sessionToken) {
-    const loggedIn = await createDeploifaiCredentials(username, sessionToken);
-    if (loggedIn) {
-      return username;
-    } else {
-      return null;
-    }
+  if (sessionToken) {
+    return await createDeploifaiCredentials(sessionToken);
   }
 }
 
