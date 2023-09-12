@@ -1,22 +1,35 @@
-import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
+import { graphql } from "../gql/generated";
 
-const getProjectsQuery = gql`
-  query GetProjectsInWorkspace($username: String!) {
-    projects(whereAccount: { username: $username }) {
-      id
-      name
-      trainings {
-        id
-        name
-        tlsPresignedUrl
-        vmPublicIps
-        vmSSHUsername
-      }
+export const projectFragment = graphql(`
+  fragment Project on Project {
+    id
+    name
+    trainings {
+      ...Training
     }
   }
-`;
+`);
 
-const getWorkspacesQuery = gql`
+export const trainingFragment = graphql(`
+  fragment Training on Training {
+    id
+    name
+    tlsPresignedUrl
+    vmPublicIps
+    vmSSHUsername
+  }
+`);
+
+const getProjectsQuery = graphql(`
+  query GetProjectsInWorkspace($username: String!) {
+    projects(whereAccount: { username: $username }) {
+      ...Project
+    }
+  }
+`);
+
+const getWorkspacesQuery = graphql(`
   query GetWorkspaces {
     me {
       account {
@@ -29,7 +42,7 @@ const getWorkspacesQuery = gql`
       }
     }
   }
-`;
+`);
 
 export function getUserProjects(
   apiClient: ApolloClient<NormalizedCacheObject>,
@@ -51,7 +64,7 @@ export async function getUserWorkspaces(
   });
 
   const teamUsernames = result.data.me.teams.map(
-    (team: any) => team.account.username
+    (team) => team.account.username
   );
 
   return [result.data.me.account.username, ...teamUsernames];
