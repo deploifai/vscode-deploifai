@@ -2,6 +2,8 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
 import { setContext } from "@apollo/client/link/context";
 import fetch from "cross-fetch";
 
+import introspectionResult from "../gql/generated/graphql";
+
 function createAPIClient(authToken: string) {
   const httpLink = new HttpLink({
     uri: "https://api.deploif.ai/graphql",
@@ -17,9 +19,13 @@ function createAPIClient(authToken: string) {
     };
   });
 
+  const cache = new InMemoryCache({
+    possibleTypes: introspectionResult.possibleTypes,
+  });
+
   const client = new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: cache,
   });
 
   return client;
