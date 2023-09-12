@@ -36,8 +36,8 @@ export function getIdentityFilePathInSection(section: any) {
 }
 
 export function sshHostSection(hostId: string, sshConfig: any): any {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   if (sshConfig) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const section = sshConfig.find({ Host: hostId });
     return section;
   }
@@ -57,9 +57,13 @@ export function sshHostKeyExists(section: any) {
  */
 export function appendSSHConfig(sshConfigPath: string, config: BaseSSHConfig) {
   const newConfig = sshConfig.parse(``).append({
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     Host: config.hostId,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     HostName: config.hostname,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     User: config.user,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     IdentityFile: config.privateKeyFilePath,
   });
   const newConfigString = os.EOL + sshConfig.stringify(newConfig) + os.EOL;
