@@ -18,6 +18,8 @@ export const trainingFragment = graphql(`
     tlsPresignedUrl
     vmPublicIps
     vmSSHUsername
+    status
+    state
   }
 `);
 
