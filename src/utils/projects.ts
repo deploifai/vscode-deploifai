@@ -1,8 +1,6 @@
-import * as vscode from "vscode";
 import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
-import { ProjectsProvider } from "../providers/ProjectsProvider";
 
-const GetProjects = gql`
+const getProjectsQuery = gql`
   query GetProjectsInWorkspace($username: String!) {
     projects(whereAccount: { username: $username }) {
       id
@@ -18,7 +16,7 @@ const GetProjects = gql`
   }
 `;
 
-const GetWorkspaces = gql`
+const getWorkspacesQuery = gql`
   query GetWorkspaces {
     me {
       account {
@@ -38,7 +36,7 @@ export function getUserProjects(
   username: string
 ) {
   return apiClient.query({
-    query: GetProjects,
+    query: getProjectsQuery,
     variables: {
       username,
     },
@@ -49,11 +47,12 @@ export async function getUserWorkspaces(
   apiClient: ApolloClient<NormalizedCacheObject>
 ): Promise<string[]> {
   const result = await apiClient.query({
-    query: GetWorkspaces,
+    query: getWorkspacesQuery,
   });
 
   const teamUsernames = result.data.me.teams.map(
     (team: any) => team.account.username
   );
+
   return [result.data.me.account.username, ...teamUsernames];
 }
