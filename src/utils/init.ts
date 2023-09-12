@@ -11,8 +11,9 @@ export default async function init(context: vscode.ExtensionContext) {
     context.globalState.update("deploifaiLoginStatus", true);
     vscode.commands.executeCommand("setContext", "deploifaiLoggedIn", true);
 
-    const client = createAPIClient(deploifaiCredentials);
-    context.globalState.update("deploifaiAPIClient", client);
+    context.globalState.update("deploifaiCredentials", deploifaiCredentials);
+
+    const client = createAPIClient(deploifaiCredentials.password);
 
     const username: string = deploifaiCredentials.account;
     context.globalState.update("deploifaiUsername", username);

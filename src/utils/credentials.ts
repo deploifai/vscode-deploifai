@@ -9,7 +9,12 @@ class LoginRejectedError extends Error {
   }
 }
 
-async function getDeploifaiCredentials() {
+export type DeploifaiCredentials = {
+  account: string;
+  password: string;
+};
+
+async function getDeploifaiCredentials(): Promise<DeploifaiCredentials | null> {
   const deploifaiVSCodeCredentials = await keytar.findCredentials(
     "deploifai-vscode"
   );
