@@ -1,6 +1,8 @@
 import { ApolloClient, NormalizedCacheObject, gql } from "@apollo/client/core";
+import { ProjectsProvider } from "../providers/ProjectsProvider";
+import { graphql } from "../gql/generated";
 
-const getProjectsQuery = gql`
+const getProjectsQuery = graphql(`
   query GetProjectsInWorkspace($username: String!) {
     projects(whereAccount: { username: $username }) {
       id
@@ -14,9 +16,9 @@ const getProjectsQuery = gql`
       }
     }
   }
-`;
+`);
 
-const getWorkspacesQuery = gql`
+const getWorkspacesQuery = graphql(`
   query GetWorkspaces {
     me {
       account {
@@ -29,7 +31,7 @@ const getWorkspacesQuery = gql`
       }
     }
   }
-`;
+`);
 
 export function getUserProjects(
   apiClient: ApolloClient<NormalizedCacheObject>,
@@ -51,7 +53,7 @@ export async function getUserWorkspaces(
   });
 
   const teamUsernames = result.data.me.teams.map(
-    (team: any) => team.account.username
+    (team) => team.account.username
   );
 
   return [result.data.me.account.username, ...teamUsernames];
