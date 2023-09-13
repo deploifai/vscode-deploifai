@@ -4,6 +4,8 @@ import * as vscode from "vscode";
 import { ProjectsProvider } from "./providers/ProjectsProvider";
 import {
   changeWorkspace,
+  startTrainingServer,
+  stopTrainingServer,
   loginToDeploifai,
   logoutFromDeploifai,
   openRemoteConnection,
@@ -81,6 +83,36 @@ export async function activate(context: vscode.ExtensionContext) {
       const workspace = context.globalState.get("deploifaiWorkspace") as string;
       projectsProvider.refresh(workspace);
     })
+  );
+
+  const startServerCommand = "deploifaiProjects.startServer";
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      startServerCommand,
+      async (node: ProjectTreeServerItem) => {
+        await startTrainingServer(context, node.trainingServer);
+
+        const workspace = context.globalState.get(
+          "deploifaiWorkspace"
+        ) as string;
+        projectsProvider.refresh(workspace);
+      }
+    )
+  );
+
+  const stopServerCommand = "deploifaiProjects.stopServer";
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      stopServerCommand,
+      async (node: ProjectTreeServerItem) => {
+        await stopTrainingServer(context, node.trainingServer);
+
+        const workspace = context.globalState.get(
+          "deploifaiWorkspace"
+        ) as string;
+        projectsProvider.refresh(workspace);
+      }
+    )
   );
 
   // Render in window

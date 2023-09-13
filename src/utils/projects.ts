@@ -101,7 +101,7 @@ export async function getUserWorkspaces(
   return [result.data.me.account.username, ...teamUsernames];
 }
 
-export async function startTrainingServer(
+export async function startTraining(
   apiClient: ApolloClient<NormalizedCacheObject>,
   where: TrainingWhereUniqueInput
 ) {
@@ -111,7 +111,7 @@ export async function startTrainingServer(
   });
 }
 
-export async function stopTrainingServer(
+export async function stopTraining(
   apiClient: ApolloClient<NormalizedCacheObject>,
   where: TrainingWhereUniqueInput
 ) {

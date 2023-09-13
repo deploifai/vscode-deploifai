@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import {
+  DeploifaiCredentials,
   createDeploifaiCredentials,
   removeDeploifaiCredentials,
 } from "./utils/credentials";
@@ -15,6 +16,8 @@ import {
   sshHostSection,
 } from "./utils/ssh";
 import { TrainingFragment } from "./gql/generated/graphql";
+import { startTraining, stopTraining } from "./utils/projects";
+import createAPIClient from "./utils/api";
 
 export async function openRemoteConnection(trainingServer: TrainingFragment) {
   const hostId = trainingServer.id;
@@ -69,6 +72,44 @@ export async function changeWorkspace(context: vscode.ExtensionContext) {
   });
 }
 
+export async function startTrainingServer(
+  context: vscode.ExtensionContext,
+  trainingServer: TrainingFragment
+) {
+  const apiClient = getAPIClient(context);
+
+  const { data, errors } = await startTraining(apiClient, {
+    id: trainingServer.id,
+  });
+
+  if (errors && errors.length > 0) {
+    vscode.window.showErrorMessage(errors[0].message);
+  } else {
+    vscode.window.showInformationMessage(
+      `Starting training server: ${trainingServer.name}`
+    );
+  }
+}
+
+export async function stopTrainingServer(
+  context: vscode.ExtensionContext,
+  trainingServer: TrainingFragment
+) {
+  const apiClient = getAPIClient(context);
+
+  const { data, errors } = await stopTraining(apiClient, {
+    id: trainingServer.id,
+  });
+
+  if (errors && errors.length > 0) {
+    vscode.window.showErrorMessage(errors[0].message);
+  } else {
+    vscode.window.showInformationMessage(
+      `Stopping training server: ${trainingServer.name}`
+    );
+  }
+}
+
 export async function loginToDeploifai(): Promise<string | undefined> {
   const sessionToken = await vscode.window.showInputBox({
     title: "Personal access token",
@@ -90,4 +131,12 @@ export async function logoutFromDeploifai() {
     return true;
   }
   return false;
+}
+
+function getAPIClient(context: vscode.ExtensionContext) {
+  const credentials = context.globalState.get(
+    "deploifaiCredentials"
+  ) as DeploifaiCredentials;
+
+  return createAPIClient(credentials.password);
 }
