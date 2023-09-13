@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { ProjectFragment, TrainingFragment } from "../gql/generated/graphql";
 
-class ProjectsTreeItem extends vscode.TreeItem {
+class ProjectTreeItem extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     collapsible: vscode.TreeItemCollapsibleState
@@ -10,7 +10,7 @@ class ProjectsTreeItem extends vscode.TreeItem {
   }
 }
 
-export class ProjectTreeProjectItem extends ProjectsTreeItem {
+export class ProjectTreeProjectItem extends ProjectTreeItem {
   constructor(
     public readonly label: string,
     public readonly project: ProjectFragment,
@@ -23,25 +23,25 @@ export class ProjectTreeProjectItem extends ProjectsTreeItem {
   }
 }
 
-export class ProjectTreeServerItem extends ProjectsTreeItem {
+export class ProjectTreeServerItem extends ProjectTreeItem {
   constructor(
     public readonly label: string,
     readonly trainingServer: TrainingFragment
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
-    this.iconPath = new vscode.ThemeIcon("vm-connect");
-    this.command = {
-      command: "deploifaiProjects.openRemote",
-      title: "Connect to remote server",
-      arguments: [this.label, trainingServer],
-    };
+    this.iconPath = new vscode.ThemeIcon(
+      "vm-connect"
+      // new vscode.ThemeColor("problemsWarningIcon.foreground")
+    );
+    this.trainingServer = trainingServer;
+    this.contextValue = "RUNNING";
   }
 }
 
-export class ProjectTreeLoginItem extends ProjectsTreeItem {
+export class ProjectTreeLoginItem extends ProjectTreeItem {
   constructor() {
     super("Login to Deploifai", vscode.TreeItemCollapsibleState.None);
-    this.iconPath = new vscode.ThemeIcon("plug");
+    this.iconPath = new vscode.ThemeIcon("sign-in");
     this.command = {
       command: "deploifai.login",
       title: "Login to Deploifai",
@@ -49,4 +49,4 @@ export class ProjectTreeLoginItem extends ProjectsTreeItem {
   }
 }
 
-export default ProjectsTreeItem;
+export default ProjectTreeItem;
