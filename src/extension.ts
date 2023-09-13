@@ -28,7 +28,8 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       openRemoteCommand,
-      (node: ProjectTreeServerItem) => openRemoteConnection(node.trainingServer)
+      async (node: ProjectTreeServerItem) =>
+        await openRemoteConnection(node.trainingServer)
     )
   );
 
