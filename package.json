@@ -55,6 +55,16 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "deploifaiProjects.startServer",
+        "title": "Start server",
+        "icon": "$(play-circle)"
+      },
+      {
+        "command": "deploifaiProjects.stopServer",
+        "title": "Stop server",
+        "icon": "$(stop-circle)"
+      },
+      {
         "command": "deploifai.changeWorkspace",
         "title": "Change workspace",
         "icon": "$(library)"
@@ -92,7 +102,17 @@
         {
           "command": "deploifaiProjects.openRemote",
           "when": "view == deploifaiProjects && viewItem == RUNNING",
-          "group": "inline"
+          "group": "inline@1"
+        },
+        {
+          "command": "deploifaiProjects.startServer",
+          "when": "view == deploifaiProjects && viewItem == SLEEPING",
+          "group": "inline@2"
+        },
+        {
+          "command": "deploifaiProjects.stopServer",
+          "when": "view == deploifaiProjects && viewItem == RUNNING",
+          "group": "inline@2"
         }
       ]
     }
