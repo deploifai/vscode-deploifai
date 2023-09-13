@@ -50,6 +50,11 @@
         "icon": "media/icon.svg"
       },
       {
+        "command": "deploifaiProjects.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "deploifai.changeWorkspace",
         "title": "Change workspace",
         "icon": "$(library)"
@@ -68,14 +73,19 @@
     "menus": {
       "view/title": [
         {
+          "command": "deploifaiProjects.refresh",
+          "when": "view == deploifaiProjects && deploifaiLoggedIn",
+          "group": "navigation@1"
+        },
+        {
           "command": "deploifai.changeWorkspace",
           "when": "view == deploifaiProjects && deploifaiLoggedIn",
-          "group": "navigation"
+          "group": "navigation@2"
         },
         {
           "command": "deploifai.logout",
           "when": "view == deploifaiProjects && deploifaiLoggedIn",
-          "group": "navigation"
+          "group": "navigation@3"
         }
       ]
     }
