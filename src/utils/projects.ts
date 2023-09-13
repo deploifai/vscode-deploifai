@@ -5,7 +5,19 @@ export const projectFragment = graphql(`
   fragment Project on Project {
     id
     name
-    trainings {
+    trainings(
+      where: {
+        status: {
+          in: [
+            DEPLOY_SUCCESS
+            DEPLOYING
+            DESTROYING
+            DEPLOY_ERROR
+            DESTROY_ERROR
+          ]
+        }
+      }
+    ) {
       ...Training
     }
   }
