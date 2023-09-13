@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import { graphql } from "../gql/generated";
+import { TrainingWhereUniqueInput } from "../gql/generated/graphql";
 
 export const projectFragment = graphql(`
   fragment Project on Project {
@@ -58,7 +59,23 @@ const getWorkspacesQuery = graphql(`
   }
 `);
 
-export function getUserProjects(
+const startTrainingMutation = graphql(`
+  mutation StartTraining($where: TrainingWhereUniqueInput!) {
+    startTraining(where: $where) {
+      ...Training
+    }
+  }
+`);
+
+const stopTrainingMutation = graphql(`
+  mutation StopTraining($where: TrainingWhereUniqueInput!) {
+    stopTraining(where: $where) {
+      ...Training
+    }
+  }
+`);
+
+export async function getUserProjects(
   apiClient: ApolloClient<NormalizedCacheObject>,
   username: string
 ) {
@@ -82,4 +99,24 @@ export async function getUserWorkspaces(
   );
 
   return [result.data.me.account.username, ...teamUsernames];
+}
+
+export async function startTrainingServer(
+  apiClient: ApolloClient<NormalizedCacheObject>,
+  where: TrainingWhereUniqueInput
+) {
+  return apiClient.mutate({
+    mutation: startTrainingMutation,
+    variables: { where },
+  });
+}
+
+export async function stopTrainingServer(
+  apiClient: ApolloClient<NormalizedCacheObject>,
+  where: TrainingWhereUniqueInput
+) {
+  return apiClient.mutate({
+    mutation: stopTrainingMutation,
+    variables: { where },
+  });
 }
