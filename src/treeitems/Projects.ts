@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { ProjectFragment, TrainingFragment } from "../gql/generated/graphql";
+import { getServerItemAttributes } from "../utils/server";
 
 class ProjectTreeItem extends vscode.TreeItem {
   constructor(
@@ -29,12 +30,15 @@ export class ProjectTreeServerItem extends ProjectTreeItem {
     readonly trainingServer: TrainingFragment
   ) {
     super(label, vscode.TreeItemCollapsibleState.None);
-    this.iconPath = new vscode.ThemeIcon(
-      "vm-connect"
-      // new vscode.ThemeColor("problemsWarningIcon.foreground")
-    );
     this.trainingServer = trainingServer;
-    this.contextValue = "RUNNING";
+
+    const { iconPath, description, tooltip, contextValue } =
+      getServerItemAttributes(trainingServer.status, trainingServer.state);
+
+    this.iconPath = iconPath;
+    this.description = description;
+    this.tooltip = tooltip;
+    this.contextValue = contextValue;
   }
 }
 
