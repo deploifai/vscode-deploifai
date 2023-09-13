@@ -30,6 +30,8 @@ export default async function init(context: vscode.ExtensionContext) {
     const isValid = await checkDeploifaiCredentials();
     if (!isValid) throw new InitAuthError("Invalid credentials");
 
+    context.globalState.update("deploifaiWorkspace", username);
+
     const workspaces = await getUserWorkspaces(client);
     context.globalState.update("deploifaiWorkspaces", workspaces);
   }
