@@ -75,6 +75,14 @@ export async function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  const refreshCommand = "deploifaiProjects.refresh";
+  context.subscriptions.push(
+    vscode.commands.registerCommand(refreshCommand, async () => {
+      const workspace = context.globalState.get("deploifaiWorkspace") as string;
+      projectsProvider.refresh(workspace);
+    })
+  );
+
   // Render in window
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider(
