@@ -16,10 +16,7 @@ import {
 } from "./utils/ssh";
 import { TrainingFragment } from "./gql/generated/graphql";
 
-export async function openRemoteConnection(
-  label: string,
-  trainingServer: TrainingFragment
-) {
+export async function openRemoteConnection(trainingServer: TrainingFragment) {
   const hostId = trainingServer.id;
   const hostname = (trainingServer.vmPublicIps as string[])[0];
   const user = trainingServer.vmSSHUsername as string;

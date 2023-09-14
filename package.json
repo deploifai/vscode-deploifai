@@ -46,8 +46,8 @@
     "commands": [
       {
         "command": "deploifaiProjects.openRemote",
-        "title": "Open Remote",
-        "icon": "media/icon.svg"
+        "title": "Open remote",
+        "icon": "$(plug)"
       },
       {
         "command": "deploifai.changeWorkspace",
@@ -61,8 +61,8 @@
       },
       {
         "command": "deploifai.login",
-        "title": "Login to Deploifai",
-        "icon": "$(accounts-view-bar-icon)"
+        "title": "Login",
+        "icon": "$(sign-in)"
       }
     ],
     "menus": {
@@ -76,6 +76,13 @@
           "command": "deploifai.logout",
           "when": "view == deploifaiProjects && deploifaiLoggedIn",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "deploifaiProjects.openRemote",
+          "when": "view == deploifaiProjects && viewItem == RUNNING",
+          "group": "inline"
         }
       ]
     }

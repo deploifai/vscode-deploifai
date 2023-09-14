@@ -8,21 +8,11 @@ import {
   logoutFromDeploifai,
   openRemoteConnection,
 } from "./commands";
-import getDeploifaiCredentials, {
-  removeDeploifaiCredentials,
-} from "./utils/credentials";
-import init, { InitAuthError, clearContext } from "./utils/init";
+import { removeDeploifaiCredentials } from "./utils/credentials";
+import init, { InitAuthError } from "./utils/init";
+import { ProjectTreeServerItem } from "./treeitems/Projects";
 
 export async function activate(context: vscode.ExtensionContext) {
-  // Register commands
-  const openRemoteCommand = "deploifaiProjects.openRemote";
-  // Register callbacks for commands
-  context.subscriptions.push(
-    vscode.commands.registerCommand(openRemoteCommand, openRemoteConnection)
-  );
-
-  const changeWorkspaceCommand = "deploifai.changeWorkspace";
-
   try {
     await init(context);
   } catch (err) {
@@ -32,6 +22,18 @@ export async function activate(context: vscode.ExtensionContext) {
       await init(context);
     }
   }
+
+  // Register commands
+  const openRemoteCommand = "deploifaiProjects.openRemote";
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      openRemoteCommand,
+      async (node: ProjectTreeServerItem) =>
+        await openRemoteConnection(node.trainingServer)
+    )
+  );
+
+  const changeWorkspaceCommand = "deploifai.changeWorkspace";
 
   const projectsProvider = new ProjectsProvider(context);
 

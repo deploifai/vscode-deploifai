@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import * as vscode from "vscode";
-import Projects, {
+import ProjectTreeItem, {
   ProjectTreeLoginItem,
   ProjectTreeProjectItem,
   ProjectTreeServerItem,
@@ -20,18 +20,20 @@ export interface ProjectsProviderInit {
   context: vscode.ExtensionContext;
 }
 
-export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
+export class ProjectsProvider
+  implements vscode.TreeDataProvider<ProjectTreeItem>
+{
   apiClient: ApolloClient<NormalizedCacheObject>;
   username: string;
   loginStatus: boolean;
   context: vscode.ExtensionContext;
 
   private _onDidChangeTreeData: vscode.EventEmitter<
-    Projects | undefined | null | void
-  > = new vscode.EventEmitter<Projects | undefined | null | void>();
+    ProjectTreeItem | undefined | null | void
+  > = new vscode.EventEmitter<ProjectTreeItem | undefined | null | void>();
 
   readonly onDidChangeTreeData: vscode.Event<
-    Projects | undefined | null | void
+    ProjectTreeItem | undefined | null | void
   > = this._onDidChangeTreeData.event;
 
   constructor(context: vscode.ExtensionContext) {
@@ -59,11 +61,11 @@ export class ProjectsProvider implements vscode.TreeDataProvider<Projects> {
     this._onDidChangeTreeData.fire();
   }
 
-  getTreeItem(element: Projects): vscode.TreeItem {
+  getTreeItem(element: ProjectTreeItem): vscode.TreeItem {
     return element;
   }
 
-  async getChildren(element?: Projects): Promise<Projects[]> {
+  async getChildren(element?: ProjectTreeItem): Promise<ProjectTreeItem[]> {
     if (this.loginStatus) {
       if (element) {
         const projectElement = element as ProjectTreeProjectItem;
