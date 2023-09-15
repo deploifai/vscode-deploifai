@@ -1,5 +1,27 @@
 # Changelog
 
+## [v0.1.1](https://github.com/deploifai/vscode-deploifai/tree/v0.1.1) (2023-09-15)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.1.0...v0.1.1)
+
+**Implemented enhancements:**
+
+- create welcome content when user is not logged in [\#20](https://github.com/deploifai/vscode-deploifai/issues/20)
+- add a refresh button to refresh project tree view in `view/title` [\#19](https://github.com/deploifai/vscode-deploifai/issues/19)
+- start/stop a server from the extension [\#11](https://github.com/deploifai/vscode-deploifai/issues/11)
+- add welcome contents to projects TreeView [\#24](https://github.com/deploifai/vscode-deploifai/pull/24) ([98sean98](https://github.com/98sean98))
+- implement start and stop action buttons for each training server [\#23](https://github.com/deploifai/vscode-deploifai/pull/23) ([98sean98](https://github.com/98sean98))
+- add refresh button in view/title to refresh current workspace's projects [\#22](https://github.com/deploifai/vscode-deploifai/pull/22) ([98sean98](https://github.com/98sean98))
+
+**Fixed bugs:**
+
+- vscode extension not working properly [\#12](https://github.com/deploifai/vscode-deploifai/issues/12)
+- The servers list has no indication of server's status [\#10](https://github.com/deploifai/vscode-deploifai/issues/10)
+- add indication to server status, and only allow open remote connection command for running servers [\#21](https://github.com/deploifai/vscode-deploifai/pull/21) ([98sean98](https://github.com/98sean98))
+
+
+
+
 ## [v0.1.0](https://github.com/deploifai/vscode-deploifai/tree/v0.1.0) (2023-09-12)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.0.9...v0.1.0)
