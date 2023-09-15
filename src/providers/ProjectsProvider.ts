@@ -1,7 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import * as vscode from "vscode";
 import ProjectTreeItem, {
-  ProjectTreeLoginItem,
   ProjectTreeProjectItem,
   ProjectTreeServerItem,
 } from "../treeitems/Projects";
@@ -90,7 +89,7 @@ export class ProjectsProvider
         });
       }
     } else {
-      return [new ProjectTreeLoginItem()];
+      return [];
     }
   }
 }
