@@ -43,6 +43,18 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "deploifaiProjects",
+        "contents": "Login to Deploifai with a personal access token. [Learn more](https://docs.deploif.ai/cloud-services/training-servers/quick-start#connecting-to-the-training-server). \n[Login](command:deploifai.login)",
+        "when": "!deploifaiLoggedIn"
+      },
+      {
+        "view": "deploifaiProjects",
+        "contents": "No projects in this workspace.\nStart by creating a project and a training server, and use this VSCode extension to connect to the server.\n[Learn more](https://docs.deploif.ai/cloud-services/training-servers/quick-start)",
+        "when": "deploifaiLoggedIn"
+      }
+    ],
     "commands": [
       {
         "command": "deploifaiProjects.openRemote",
