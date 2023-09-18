@@ -14,6 +14,7 @@ export class InitAuthError extends Error {
 
 export default async function init(context: vscode.ExtensionContext) {
   const deploifaiCredentials = await getDeploifaiCredentials();
+
   if (deploifaiCredentials === null) {
     context.globalState.update("deploifaiLoginStatus", false);
   } else {
