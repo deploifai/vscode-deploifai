@@ -12,6 +12,15 @@ export interface BaseSSHConfig {
   privateKeyFilePath: string;
 }
 
+export function createSSHDir() {
+  const homeDirectory = os.homedir();
+  const sshDirPath = path.join(homeDirectory, ".ssh");
+
+  if (!fs.existsSync(sshDirPath)) {
+    fs.mkdirSync(sshDirPath);
+  }
+}
+
 export function getSSHConfigPath(): string {
   const homeDirectory = os.homedir();
   const configFilePath = path.join(homeDirectory, ".ssh", "config");
