@@ -7,6 +7,7 @@ import {
 } from "./utils/credentials";
 import {
   appendSSHConfig,
+  createSSHDir,
   createSSHKeyFile,
   getIdentityFilePathInSection,
   getSSHConfigPath,
@@ -24,6 +25,8 @@ export async function openRemoteConnection(trainingServer: TrainingFragment) {
   const hostname = (trainingServer.vmPublicIps as string[])[0];
   const user = trainingServer.vmSSHUsername as string;
   const identityFileURL = trainingServer.tlsPresignedUrl as string;
+
+  createSSHDir();
 
   const sshConfigFilePath = getSSHConfigPath();
 

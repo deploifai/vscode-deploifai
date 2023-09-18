@@ -14,6 +14,14 @@ import { removeDeploifaiCredentials } from "./utils/credentials";
 import init, { InitAuthError } from "./utils/init";
 import { ProjectTreeServerItem } from "./treeitems/Projects";
 
+const loginCommand = "deploifai.login";
+const logoutCommand = "deploifai.logout";
+const changeWorkspaceCommand = "deploifai.changeWorkspace";
+const refreshCommand = "deploifaiProjects.refresh";
+const openRemoteCommand = "deploifaiProjects.openRemote";
+const startServerCommand = "deploifaiProjects.startServer";
+const stopServerCommand = "deploifaiProjects.stopServer";
+
 export async function activate(context: vscode.ExtensionContext) {
   try {
     await init(context);
@@ -25,8 +33,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   }
 
+  const projectsProvider = new ProjectsProvider(context);
+
   // Register commands
-  const openRemoteCommand = "deploifaiProjects.openRemote";
   context.subscriptions.push(
     vscode.commands.registerCommand(
       openRemoteCommand,
@@ -34,13 +43,6 @@ export async function activate(context: vscode.ExtensionContext) {
         await openRemoteConnection(node.trainingServer)
     )
   );
-
-  const changeWorkspaceCommand = "deploifai.changeWorkspace";
-
-  const projectsProvider = new ProjectsProvider(context);
-
-  const loginCommand = "deploifai.login";
-  const logoutCommand = "deploifai.logout";
 
   context.subscriptions.push(
     vscode.commands.registerCommand(loginCommand, async () => {
@@ -77,7 +79,6 @@ export async function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  const refreshCommand = "deploifaiProjects.refresh";
   context.subscriptions.push(
     vscode.commands.registerCommand(refreshCommand, async () => {
       const workspace = context.globalState.get("deploifaiWorkspace") as string;
@@ -85,7 +86,6 @@ export async function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  const startServerCommand = "deploifaiProjects.startServer";
   context.subscriptions.push(
     vscode.commands.registerCommand(
       startServerCommand,
@@ -100,7 +100,6 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  const stopServerCommand = "deploifaiProjects.stopServer";
   context.subscriptions.push(
     vscode.commands.registerCommand(
       stopServerCommand,
