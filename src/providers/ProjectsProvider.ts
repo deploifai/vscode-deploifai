@@ -38,11 +38,11 @@ export class ProjectsProvider
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.username =
-      (this.context.globalState.get("deploifaiUsername") as string) || "";
-    const credentials = this.context.globalState.get(
+      this.context.globalState.get<string>("deploifaiUsername") ?? "";
+    const credentials = this.context.globalState.get<DeploifaiCredentials>(
       "deploifaiCredentials"
-    ) as DeploifaiCredentials;
-    this.apiClient = createAPIClient(credentials.password);
+    );
+    this.apiClient = createAPIClient(credentials?.password ?? "");
     this.loginStatus = this.context.globalState.get(
       "deploifaiLoginStatus"
     ) as boolean;
@@ -50,10 +50,10 @@ export class ProjectsProvider
 
   refresh(username: string) {
     this.username = username;
-    const credentials = this.context.globalState.get(
+    const credentials = this.context.globalState.get<DeploifaiCredentials>(
       "deploifaiCredentials"
-    ) as DeploifaiCredentials;
-    this.apiClient = createAPIClient(credentials.password);
+    );
+    this.apiClient = createAPIClient(credentials?.password ?? "");
     this.loginStatus = this.context.globalState.get(
       "deploifaiLoginStatus"
     ) as boolean;
