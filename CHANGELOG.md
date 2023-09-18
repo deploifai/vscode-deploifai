@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.1.2](https://github.com/deploifai/vscode-deploifai/tree/v0.1.2) (2023-09-18)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.1.1...v0.1.2)
+
+**Fixed bugs:**
+
+- ssh connection doesn't seem to work on windows vscode [\#8](https://github.com/deploifai/vscode-deploifai/issues/8)
+- fix critical problems with the extension [\#25](https://github.com/deploifai/vscode-deploifai/pull/25) ([98sean98](https://github.com/98sean98))
+
+
+
+
 ## [v0.1.1](https://github.com/deploifai/vscode-deploifai/tree/v0.1.1) (2023-09-15)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.1.0...v0.1.1)
