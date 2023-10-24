@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import fetch from "node-fetch";
-// import * as electron from "electron";
 import * as Store from "electron-store";
 
 class LoginRejectedError extends Error {
@@ -14,13 +13,6 @@ class CheckCredentialsRejectedError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "CheckCredentialsRejectedError";
-  }
-}
-
-class SafeStorageNotAvailableError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "SafeStorageNotAvailableError";
   }
 }
 
@@ -45,6 +37,8 @@ const store = new Store({
     },
   },
 }) as Store<StoreData>;
+
+console.log({ store });
 
 async function getDeploifaiCredentials(): Promise<DeploifaiCredentials | null> {
   console.log("getting deploifai credentials");
@@ -85,8 +79,6 @@ export async function createDeploifaiCredentials(
   } catch (err) {
     if (err instanceof LoginRejectedError) {
       vscode.window.showErrorMessage("Invalid token");
-    } else if (err instanceof SafeStorageNotAvailableError) {
-      vscode.window.showErrorMessage("Safe storage not available");
     } else {
       vscode.window.showErrorMessage("Unknown error while logging in");
     }
