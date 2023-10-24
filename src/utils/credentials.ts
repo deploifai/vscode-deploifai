@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import fetch from "node-fetch";
-import * as electron from "electron";
+// import * as electron from "electron";
 import * as Store from "electron-store";
 
 class LoginRejectedError extends Error {
@@ -49,23 +49,11 @@ const store = new Store({
 async function getDeploifaiCredentials(): Promise<DeploifaiCredentials | null> {
   console.log("getting deploifai credentials");
 
-  if (electron.safeStorage.isEncryptionAvailable()) {
-    const encryptedCredentials = store.get(
-      "credentials"
-    ) as DeploifaiCredentials;
-    if (
-      typeof encryptedCredentials.password === "string" &&
-      encryptedCredentials.password.length > 0
-    ) {
-      console.log("encrypted", encryptedCredentials);
-      const decryptedPassword = electron.safeStorage.decryptString(
-        Buffer.from(encryptedCredentials.password)
-      );
-      return {
-        account: encryptedCredentials.account,
-        password: decryptedPassword,
-      };
-    }
+  const credentials = store.get("credentials") as DeploifaiCredentials;
+  console.log("got credentials:", credentials);
+
+  if (credentials) {
+    return credentials;
   }
 
   return null;
@@ -88,11 +76,9 @@ export async function createDeploifaiCredentials(
       throw new LoginRejectedError("Login Rejected");
     } else if (response.status === 200) {
       const body = await response.json();
-      const encryptedToken = electron.safeStorage.encryptString(sessionToken);
-      console.log("encryptedToken", encryptedToken.toString());
       store.set("credentials", {
         account: body.username,
-        password: encryptedToken.toString(),
+        password: sessionToken,
       });
       return body.username;
     }
