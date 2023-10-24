@@ -38,13 +38,8 @@ const store = new Store({
   },
 }) as Store<StoreData>;
 
-console.log({ store });
-
 async function getDeploifaiCredentials(): Promise<DeploifaiCredentials | null> {
-  console.log("getting deploifai credentials");
-
   const credentials = store.get("credentials") as DeploifaiCredentials;
-  console.log("got credentials:", credentials);
 
   if (credentials) {
     return credentials;

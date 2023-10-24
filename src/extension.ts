@@ -23,8 +23,6 @@ const startServerCommand = "deploifaiProjects.startServer";
 const stopServerCommand = "deploifaiProjects.stopServer";
 
 export async function activate(context: vscode.ExtensionContext) {
-  console.log("start activating");
-
   try {
     await init(context);
   } catch (err) {
@@ -123,8 +121,6 @@ export async function activate(context: vscode.ExtensionContext) {
       projectsProvider
     )
   );
-
-  console.log("finish activating extension");
 }
 
 // this method is called when your extension is deactivated
