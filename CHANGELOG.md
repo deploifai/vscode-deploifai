@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.2.1](https://github.com/deploifai/vscode-deploifai/tree/v0.2.1) (2023-10-26)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.2.0...v0.2.1)
+
+**Merged pull requests:**
+
+- fix missing dependencies [\#28](https://github.com/deploifai/vscode-deploifai/pull/28) ([98sean98](https://github.com/98sean98))
+
+
+
+
 ## [v0.2.0](https://github.com/deploifai/vscode-deploifai/tree/v0.2.0) (2023-10-26)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.1.2...v0.2.0)
