@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import * as keytar from "keytar";
 import fetch from "node-fetch";
+import * as Store from "electron-store";
 
 class LoginRejectedError extends Error {
   constructor(message: string) {
@@ -21,15 +21,31 @@ export type DeploifaiCredentials = {
   password: string;
 };
 
+interface StoreData {
+  credentials: DeploifaiCredentials;
+}
+
+const store = new Store({
+  name: "deploifai-vscode",
+  schema: {
+    credentials: {
+      type: "object",
+      properties: {
+        account: { type: "string" },
+        password: { type: "string" },
+      },
+    },
+  },
+}) as Store<StoreData>;
+
 async function getDeploifaiCredentials(): Promise<DeploifaiCredentials | null> {
-  const deploifaiVSCodeCredentials = await keytar.findCredentials(
-    "deploifai-vscode"
-  );
-  if (deploifaiVSCodeCredentials.length) {
-    return deploifaiVSCodeCredentials[0];
-  } else {
-    return null;
+  const credentials = store.get("credentials") as DeploifaiCredentials;
+
+  if (credentials) {
+    return credentials;
   }
+
+  return null;
 }
 
 export async function createDeploifaiCredentials(
@@ -49,7 +65,10 @@ export async function createDeploifaiCredentials(
       throw new LoginRejectedError("Login Rejected");
     } else if (response.status === 200) {
       const body = await response.json();
-      await keytar.setPassword("deploifai-vscode", body.username, sessionToken);
+      store.set("credentials", {
+        account: body.username,
+        password: sessionToken,
+      });
       return body.username;
     }
   } catch (err) {
@@ -101,7 +120,7 @@ export async function checkDeploifaiCredentials(): Promise<boolean> {
 export async function removeDeploifaiCredentials() {
   const credentials = await getDeploifaiCredentials();
   if (credentials) {
-    await keytar.deletePassword("deploifai-vscode", credentials?.account);
+    store.delete("credentials");
   }
 }
 

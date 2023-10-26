@@ -161,8 +161,8 @@
   "dependencies": {
     "@apollo/client": "^3.8.3",
     "cross-fetch": "^3.1.5",
+    "electron-store": "^8.1.0",
     "graphql": "^16.8.0",
-    "keytar": "^7.9.0",
     "node-fetch": "^2.7.0",
     "ssh-config": "^4.1.6"
   }
