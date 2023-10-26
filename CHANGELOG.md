@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.2.0](https://github.com/deploifai/vscode-deploifai/tree/v0.2.0) (2023-10-26)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.1.2...v0.2.0)
+
+**Fixed bugs:**
+
+- fail to activate extension in macOS 13.6, 14 and above [\#26](https://github.com/deploifai/vscode-deploifai/issues/26)
+- migrate credentials store to electron-store [\#27](https://github.com/deploifai/vscode-deploifai/pull/27) ([98sean98](https://github.com/98sean98))
+
+
+
+
 ## [v0.1.2](https://github.com/deploifai/vscode-deploifai/tree/v0.1.2) (2023-09-18)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.1.1...v0.1.2)
