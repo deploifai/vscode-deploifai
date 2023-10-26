@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.2.3](https://github.com/deploifai/vscode-deploifai/tree/v0.2.3) (2023-10-26)
+
+[Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.2.2...v0.2.3)
+
+**Merged pull requests:**
+
+- add ajv to dependencies list [\#30](https://github.com/deploifai/vscode-deploifai/pull/30) ([98sean98](https://github.com/98sean98))
+
+
+
+
 ## [v0.2.2](https://github.com/deploifai/vscode-deploifai/tree/v0.2.2) (2023-10-26)
 
 [Full Changelog](https://github.com/deploifai/vscode-deploifai/compare/v0.2.1...v0.2.2)
